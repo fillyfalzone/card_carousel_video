@@ -1,0 +1,137 @@
+/* Conteneur du carrousel */
+.carousel {
+    display: flex;
+    width: 100%;
+    height: 500px;
+    align-items: center;
+    perspective: 300px;
+}
+
+.carousel {
+    overflow: hidden; /* Empêche le débordement visuel */
+    touch-action: pan-y; /* Désactive le scrolling horizontal, mais autorise le scroll vertical */
+}
+
+.carousel__list {
+    display: flex;
+    list-style: none;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+}
+
+.carousel__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 2rem;
+    width: 300px;
+    height: 500px;
+    border-radius: 12px;
+    box-shadow: 0px 2px 8px 0px rgba(50, 50, 50, 0.5);
+    position: absolute;
+    transition: all 0.3s ease-in;
+    pointer-events: auto; /* Permet de cliquer sur tous les items visibles */
+}
+
+/* Styles pour l'animation au chargement */
+.carousel__item {
+    opacity: 0;
+    transform: translateX(0) scale(0.5); /* Départ compressé */
+    transition: transform 0.5s ease, opacity 0.5s ease; /* Transition pour l'animation */
+}
+
+.carousel__item[data-pos] {
+    opacity: 1; /* Une fois déployé, l'opacité revient à 1 */
+}
+
+/* Styles pour les différentes positions */
+/* Position centrale (élément actif) */
+.carousel__item[data-pos="0"] {
+    z-index: 3;
+    transform: translateX(0) scale(1);
+    opacity: 1;
+}
+/* Positions adjacentes (éléments gauche et droite) */
+.carousel__item[data-pos="-1"],
+.carousel__item[data-pos="1"] {
+    z-index: 2;
+    transform: translateX(calc(-60% * var(--direction))) scale(0.9);
+    opacity: 0.9;
+    filter: blur(4px) grayscale(10%);
+    pointer-events: auto; /* Rendre ces items cliquables */
+}
+
+/* Positions plus éloignées */
+.carousel__item[data-pos="-2"],
+.carousel__item[data-pos="2"] {
+    z-index: 1;
+    transform: translateX(calc(-120% * var(--direction))) scale(0.8);
+    opacity: 0.8;
+    filter: blur(5px) grayscale(20%);
+    pointer-events: auto; /* Ces items restent cliquables */
+}
+
+/* Items totalement hors écran */
+.carousel__item[data-pos="-3"],
+.carousel__item[data-pos="3"] {
+    z-index: 0;
+    transform: translateX(calc(-180% * var(--direction))) scale(0.7);
+    opacity: 0.7;
+    filter: blur(6px) grayscale(40%);
+    pointer-events: none; /* Empêche les clics uniquement sur ces items */
+}
+
+@media (max-width: 500px) {
+    .carousel__item {
+        width: 200px; /* Réduit la largeur des items */
+        height: 300px; /* Réduit la hauteur des items */
+        font-size: 1.2rem; /* Réduit la taille du texte */
+    }
+
+    /* Ajuste les positions */
+    .carousel__item[data-pos="0"] {
+        transform: translateX(0) scale(0.9);
+    }
+
+    .carousel__item[data-pos="-1"],
+    .carousel__item[data-pos="1"] {
+        transform: translateX(calc(-50% * var(--direction))) scale(0.8);
+    }
+
+    .carousel__item[data-pos="-2"],
+    .carousel__item[data-pos="2"] {
+        transform: translateX(calc(-100% * var(--direction))) scale(0.7);
+    }
+
+    .carousel__item[data-pos="-3"],
+    .carousel__item[data-pos="3"] {
+        transform: translateX(calc(-150% * var(--direction))) scale(0.6);
+    }
+}
+
+/*
+    Stylisation des vidéos et figures
+*/
+
+.carousel__item figure {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel__item figure video {
+    width: 100%;         /* La vidéo occupe toute la largeur de l'item */
+    height: 100%;        /* La vidéo occupe toute la hauteur de l'item */
+    object-fit: cover;   /* La vidéo couvre entièrement l'item sans déformation */
+    position: absolute;  /* Pour la positionner correctement */
+    top: 0;
+    left: 0;
+    z-index: 1;          /* Assure que la vidéo soit au-dessous des éléments superposés */
+}
